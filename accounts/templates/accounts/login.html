@@ -1,0 +1,71 @@
+{% load static %}
+{% load socialaccount %}
+{% providers_media_js %}
+<!DOCTYPE html> 
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static 'accounts/login.css' %}">
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+</head>
+
+<body>
+
+    <div class="loginpage">
+        <form class="login" method="POST">
+            {% csrf_token %}
+            <div align="center">
+                <img src="{% static 'accounts/img/Logo.png' %}" alt="venbook logo" width="240" height="100%">
+            </div>
+            <h2>Login to your account</h2>
+            <div class="underline">
+                <hr>
+            </div>
+            <div class="form-group">
+                <label for="email">Username</label>
+                <div class="input-group">
+                    <input name="username" type="text" id="email" placeholder="testuser">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="email">Password</label>
+                <div class="input-group-pass">
+                    <input name="password" type="password" id="password" placeholder="•••••••••••">
+                </div>
+            </div>
+            <div class="fpass"><a href="{% url 'reset_password' %}">Forget Password?</a></div>
+            <div align="center">
+                <button type="submit" class="btn-signin">Sign in</button>
+            </div>
+            <div class="or">
+                <div></div>
+                <p>or</p>
+                <div></div>
+            </div>
+            <div align="center">
+                <div class='g-sign-in-button'>
+                    <div class=content-wrapper>
+                        <div class='logo-wrapper'>
+                            <img
+                                src='https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-suite-everything-you-need-know-about-google-newest-0.png'>
+                        </div>
+                        <span class='text-container'>
+                            <a href="{% provider_login_url 'google' %}">Sign in with google</a>
+                        </span>
+                    </div>
+                </div> 
+            </div>
+
+            <p class="signup">Don't have an account? <a style="font-weight: 600; color: rgb(254, 27, 27);"
+                    href="{% url 'accounts:registerAsUser' %}">Register</a></p>
+        </form>
+
+    </div>
+
+</body>
+
+</html>

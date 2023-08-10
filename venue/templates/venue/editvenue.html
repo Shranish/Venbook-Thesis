@@ -1,0 +1,322 @@
+{% extends 'home/base.html' %}
+{% load static %}
+
+{% block link %}
+<a class="dropdown-item" href="{% url 'calender:viewCalender' %}">Calender</a>  
+<a class="dropdown-item" href="{% url 'venue:BookingRequest' %}">Booking Request</a>  
+{% endblock %}
+
+{% block body %}
+<script type="text/javascript" src="{% static 'venue/jquery-3.6.0.js' %}"></script> 
+<script type="text/javascript" src="{% static 'venue/jquery.easing.min.js' %}"></script> 
+<!-- <script type="text/javascript" src="{{ STATIC_URL }} /static/venue/jquery.min.js"></script>  -->
+<link rel="stylesheet" href="{% static 'venue/editVenue.css' %}">
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  />
+
+<div class="editCtn">
+    <h1 class="heading">Dashboard</h1>
+    <div class="row p-0 justify-content-between">
+        <div class="Ctn1 col-md-8 d-flex flex-wrap justify-content-between flex-row ">
+            <div class="Ctn mt-4 p-4 col-md-6 rounded">
+                <h3 class="CtnTitle mb-3">Hi, {{venue_instance.name}}</h3>
+                <p style="font-size: 12px; font-family: 'Poppins'; color:#464646">You have {{eventupcoming}} upcoming event in the next 7 days</p>
+                <form action="{% url 'calender:viewCalender' %}">
+                    <button class="calenderBtn mt-2">View in Calender</button>
+                </form>
+            </div>
+
+            <div class="Ctn d-flex flex-wrap justify-content-between align-items-center mt-4 p-2 col-md-5 rounded">
+                <div class="info-card green-info">
+                    <div style="margin-left:-18px" class="img-holder green-holder">
+                        <img src="{% static 'img/booked.png' %}" alt="">
+
+                    </div>
+                    <h5 style="color: rgb(3, 165, 3);">{{bookedEventCount}} <br><span><p class="info-small-text">Booked Event</p></span></h5>
+                </div>
+                <div class="info-card blue-info">
+                    <div class="img-holder blue-holder">
+                        <img src="{% static 'img/calenderImg.png' %}" alt="">
+
+                    </div>
+                    
+                    <h5>{{RequestEventCount}} <br><span><p class="info-small-text">Booking Requests</p></span></h5>
+                </div>
+                <div class="info-card red-info">
+                    <div class="img-holder red-holder">
+                        <img src="{% static 'img/rejected.png' %}" alt="">
+
+                    </div>
+                    <h5 style="color: red;">{{DeclinedRequestEventCount}} <br><span><p class="info-small-text">Declined Request</p></span></h5>
+                </div>
+                <div class="info-card yellow-info">
+                    <div style="margin-left:-18px" class="img-holder yellow-holder">
+                        <img src="{% static 'img/calenderImg.png' %}" alt="">
+
+                    </div>
+                    <h5 style="color: rgb(255, 196, 0);">0 <br><span><p class="info-small-text">Booked Event</p></span></h5>
+                </div>
+
+            </div>
+            <div class="eventCtn mt-4 p-4 col-md-6 rounded">
+               <h4 class="CtnTitle mb-1 d-flex flex-wrap justify-content-between">Venbook Events</h3>
+                <p style="font-size: 10px; color: #5a5a5a;">Events booked with venbook</p>
+                <div class="eventCtnwrapper">
+                    {% if event_exists %}
+                        {% for event in venbookEvent_list %}
+                            <div class="ind_event">
+                                <div class="d-flex event_titleCtn justify-content-between align-items-center pt-2 pl-2 pr-2">
+                                    <h6>{{event.venue_event_info.event_name}}</h6>
+
+                                    <h6 class="registeredDateText">Registered on: {{event.venue_event_info.registered_at.date}}</h6>
+
+                                </div>
+                                <div class="d-flex flex-column justify-content-between pt-1 pl-2 pr-2">
+                                    <h6 class="event_text">Event Date: <span style="font-weight:600">{{event.venue_event_info.event_date}}</span></h6>
+                                    <h6 class="event_text">No of People: <span style="font-weight:600">{{event.venue_event_info.people}}</span></h6>
+                                    <h6 class="event_text">Event Type: <span style="font-weight:600">{{event.venue_event_info.event_type}}</span></h6>
+                                    <h6 class="event_text">Event Details: <span style="font-weight:600">{{event.venue_event_info.event_details}}</span></h6>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                    
+                    <div class="noeventCtn d-flex justify-content-center align-items-center">
+                        <h5>No events registered</h5>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div style="border-left: 2px solid #fff;" class="eventCtn mt-4 p-4 col-md-6 rounded">
+                <h4 class="CtnTitle mb-1 d-flex flex-wrap justify-content-between">Out Events<span><button id="addnewevent" class="btn btn-primary">Add new event</button></span></h3>
+                    <p style="font-size: 10px; color: #5a5a5a; margin-top: -10px;">Events booked outside venbook</p>
+                    <div class="eventCtnwrapper">
+                     {% if outevent_exists %}
+                         {% for event in outvenbookEvent_list %}
+                             <div class="ind_event">
+                                 <div class="d-flex event_titleCtn justify-content-between align-items-center pt-2 pl-2 pr-2">
+                                     <h6>{{event.event_info.event_name}}</h6>
+ 
+                                     <h6 class="registeredDateText">Registered on: {{event.event_info.registered_at.date}}</h6>
+ 
+                                 </div>
+                                 <div class="d-flex flex-column justify-content-between pt-1 pl-2 pr-2">
+                                     <h6 class="event_text">Event Date: <span style="font-weight:600">{{event.event_info.event_date}}</span></h6>
+                                     <h6 class="event_text">No of People: <span style="font-weight:600">{{event.event_info.people}}</span></h6>
+                                     <h6 class="event_text">Event Type: <span style="font-weight:600">{{event.event_info.event_type}}</span></h6>
+                                     <h6 class="event_text">Event Details: <span style="font-weight:600">{{event.event_info.event_details}}</span></h6>
+                                 </div>
+                             </div>
+                         {% endfor %}
+                     {% else %}
+                     
+                     <div class="noeventCtn d-flex justify-content-center align-items-center">
+                         <h5>No events registered</h5>
+                     </div>
+                     {% endif %}
+                 </div>
+             </div>
+
+        </div>
+        <div class="Editprf sticky-right mt-4 p-4 col-md-4 rounded">
+            <h4 class="CtnTitle">Edit Profile</h4>
+            <img class="venue_pp" src="{{venue_instance.venue_pp.url}}" alt="">
+
+            <h5 class="mt-3">Description</h5>
+            <div class="d-flex justify-content-end mb-3" style="margin-top: -35px;">
+                <button style="font-size: 12px;" class="btn small" id="editvenuedesc"><i class="fa fa-edit" style="font-size:20px"></i></button>
+            </div>
+            <form action="{% url 'venue:VenueDescUpdate' venue_instance.id %}" method="POST">
+                {% csrf_token %}
+                <p id="venuedesc" class="small">{{venue_instance.description}}</p>
+                <textarea id="editdesc" name="venue_description" class="d-none" cols="30" rows="auto">{{venue_instance.description}}</textarea>
+                <button type="submit" class="PriceBtn d-none mt-2" id="updatedesc">Update</button>
+            </form>
+            <h5 class="mt-3 d-flex justify-content-between">Pricing</h5>
+            {% if price_exist_status == True %}
+            <div class="d-flex justify-content-end mb-3" style="margin-top: -35px;">
+                <button style="font-size: 12px;" class="btn small" id="editvenueprice"><i class="fa fa-edit" style="font-size:20px"></i></button>
+            </div>
+
+            <div>   
+                <form action="{% url 'venue:VenuePriceUpdate' %}" name="priceform" method="POST">
+                    {% csrf_token %}
+                    <input class="priceInput" name="venue_id" type="hidden" value="{{VenuePriceData.venue_account.id}}" disabled>
+                    <p class="small d-flex justify-content-between">Average pricing for 0-300 people<span><input class="priceInput text-right" name="min-people" value="{{VenuePriceData.min_people}}" min="1" disabled type="number"></span></p>
+                    <p class="small d-flex justify-content-between">Average pricing for 300-500 people<span><input class="priceInput text-right" name="mid-people" value="{{VenuePriceData.mid_people}}" min="1" disabled type="number"></span></p>
+                    <p class="small d-flex justify-content-between">Average pricing for 500-2000 people<span><input class="priceInput text-right" name="max-people" value="{{VenuePriceData.max_people}}" min="1" disabled type="number"></span></p>
+                    <h5 class="mt-3">Additional Charges</h5>
+                    <p class="small d-flex justify-content-between">DJ<span><input class="priceInput text-right" name="dj_price" disabled type="number" min="1" value="{{VenuePriceData.dj_price}}"></span></p>
+                    <p class="small d-flex justify-content-between">Decoration<span>
+                        {% if VenuePriceData.decoration ==  True %}
+                        <input class="priceInput" name="decoration" type="checkbox" checked disabled>
+                        {% else %}
+                        <input class="priceInput" name="decoration" type="checkbox" disabled>
+                        {% endif %}
+                    </span></p>
+                    <p class="small d-flex justify-content-between">Projectors<span><input class="priceInput text-right" name="projectors" min="1" value="{{VenuePriceData.projectors}}" disabled type="number"></span></p>
+                    <button type="submit" class="PriceBtn d-none mt-2" id="updatenewprice">Update</button>
+                </form>
+                
+            </div>
+            {% else %}
+
+            <form class="priceCtn" method="POST">
+                {% csrf_token %}
+
+                    <!-- <p id="venueAcc" class="small d-flex justify-content-between">VenueAccount<span>{{form.venue_account}}</span></p> -->
+                    <p class="small d-flex justify-content-between">Average pricing for 0-300 people<span>{{form.min_people}}</span></p>
+                    <p class="small d-flex justify-content-between">Average pricing for 300-500 people<span>{{form.mid_people}}</span></p>
+                    <p class="small d-flex justify-content-between">Average pricing for 500-2000 people<span>{{form.max_people}}</span></p>
+                    <h5 class="mt-3">Additional Charges</h5>
+                    <p class="small d-flex justify-content-between">DJ<span>{{form.dj_price}}</span></p>
+                    <p class="small d-flex justify-content-between">Decoration<span>{{form.decoration}}</span></p>
+                    <p class="small d-flex justify-content-between">Projectors<span>{{form.projectors}}</span></p>
+
+                <button type="submit" class="PriceBtn d-none mt-2" name="addnewpriceBtn" id="savenewprice">Save</button>
+            </form>
+                <button class="PriceBtn mt-2" id="addnewprice">Add new prices</button>
+
+
+            {% endif %}
+
+            
+        </div>
+    </div>
+    <div id="msgChk" class="msg-box d-none alert alert-warning alert-dismissible fade show" role="alert">
+        <p class="msg">Please complete the shipping information.</p> 
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+</div>
+
+    <div class="addeventCtn d-none col-lg-4 col-md-8 col-sm-9">
+        <form class="eventform" method="POST">
+            {% csrf_token %}
+
+            <h4 class="EventTitle d-flex justify-content-between">Create a new event<span><button class="closeBtn">x</button></span></h3>
+                <p class="eventInfo mb-4">Please use this form for events registered outside of venbook</p>
+            <div class="form-group">
+                <div class="form-row d-none">
+                    <div class="form-group col-md-6">
+                        <label>venue</label>
+                        {{eventForm.venue_account}}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label>First name</label>
+                        {{eventUserForm.first_name}}
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Last Name</label>
+                        {{eventUserForm.last_name}}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label>Email</label>
+                        {{eventUserForm.email}}
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Phone number</label>
+                        {{eventUserForm.phone}}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label>Event Name</label>
+                        {{eventForm.event_name}}
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Event Date</label>
+                        <br>
+                        {{eventForm.event_date}}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label>Event Type</label>
+                        {{eventForm.event_type}}
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Number of people</label>
+                        {{eventForm.people}}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label>Event Details</label>
+                        {{eventForm.event_details}}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        {% if eventForm.errors or eventUserForm.errors %}
+                        <div class="alert alert-danger">
+                            {{ eventForm.errors }}
+                            {{ eventUserForm.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <button type="submit" class="btn btn-primary" name="createeventBtn">Create event</button>
+                </div>
+            </div>
+                
+          </form>
+
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script>
+    let cat_click=false
+         $('#addnewprice').click(function(){
+            if (cat_click == false){
+                document.getElementsByClassName("priceCtn")[0].style.height = "320px"
+                $("#addnewprice").addClass("d-none")
+                $("#savenewprice").removeClass("d-none")
+
+                cat_click=true
+            }
+            else if(cat_click==true){
+                document.getElementsByClassName("priceCtn")[0].style.width = "0px"
+
+                cat_click=false
+            }
+         })
+
+    $('#editvenueprice').click(function(){
+        $('.priceInput').prop("disabled", false)
+        $('#updatenewprice').removeClass('d-none')
+    })
+
+    $('#editvenuedesc').click(function(){
+        $('#venuedesc').addClass('d-none')
+        $('#editdesc').removeClass('d-none')
+        $('#updatedesc').removeClass('d-none')
+    })
+
+    $('#addnewevent').click(function(){
+        $('.addeventCtn').removeClass("d-none")
+    })
+    $('.closeBtn').click(function(){
+        $('.addeventCtn').addClass("d-none")
+        event.preventDefault()
+    })
+
+
+
+
+
+    
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap');
+.heading{
+    padding-left: 9%;
+    margin-bottom: 30px;
+    font-size: 28px;
+    font-weight: 600;
+    font-family: 'Poppins';
+    color: #303030;
+}
+#calendar{
+    width: 82%;
+    margin-bottom: 70px;
+}
+.evo-calendar{
+    font-family: 'Poppins', sans-serif;
+}
+@media (max-width: 426px){
+    .heading{
+        padding-left: 5%;
+        margin-top: 30px;
+        font-size: 24px;
+    }
+    #calendar{
+        width: 92%;
+    }
+}

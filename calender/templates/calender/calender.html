@@ -1,0 +1,43 @@
+{% extends 'home/base.html' %}
+{% load static %}
+
+{% block body %}
+<link rel="stylesheet" href="{% static 'calender/calendar.css'  %}">
+<link rel="stylesheet" href="{% static 'calender/evo-calendar.min.css'  %}">
+<link rel="stylesheet" href="{% static 'calender/evo-calendar.midnight-blue.min.css'  %}">
+<div>
+    <h1 class="heading">{{venue_instance}} Event Calendar</h1>
+</div>
+<div id="calendar"></div>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+<script src="{% static 'calender/js/evo-calendar.js' %}"></script>
+<script>
+    var calendarEvents= []
+
+    {% for i in allevents %}
+        calendarEvents.push({
+            id:   "{{i.venue_event_info.id}}",
+            name: "{{i.venue_event_info.event_name}}",
+            date: "{{i.venue_event_info.event_date}}",
+            badge: "{{i.venue_event_info.event_type}}",
+            type: "{{i.venue_event_info.event_type}",
+            description: "{{i.venue_event_info.event_details}}",
+            color: "#FECA76",
+        });
+        calendarEvents.push({
+            id:   "{{i.id}}",
+            name: "{{i.event_name}}",
+            date: "{{i.event_date}}",
+            badge: "{{i.event_type}}",
+            type: "{{i.event_type}",
+            description: "{{i.event_details}}",
+            color: "#FECA76",
+        });
+    {% endfor %}
+
+    console.log(calendarEvents)
+    $("#calendar").evoCalendar({
+        calendarEvents
+    });
+  </script>
+{% endblock %}

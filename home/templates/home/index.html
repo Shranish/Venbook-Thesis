@@ -1,0 +1,132 @@
+{% extends 'home/base.html' %}
+{% load static %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block body %}
+<link rel="stylesheet" href="{% static 'home/index.css' %}">
+
+<div class="searchContainer">
+
+    <div class="bg-image">
+        <img src="{% static 'home/img/backgroundImg.jpg' %}">
+    </div>
+
+    <div class="bg-banner">
+    </div>
+
+    <p class="p">Welcome To</p>
+    <h1 class="text">Nepal's Top Venue Booking Platform</h1>
+    <div class="filter">
+        <h5>Filter the perfect venue for your grand event</h5>
+        <form method="GET" action="/search">
+            <div class="form-group">
+                <label class="filter-label" for="inputAddress">Location</label>
+                <input type="text" class="form-control" placeholder="1234 Main St" name="location" id="search">
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label class="filter-label" for="inputEmail4">Date</label>
+                    <input type="date" class="form-control" id="inputEmail4" placeholder="Email">
+                </div>
+                <div class="form-group col-md-6">
+                    <label class="filter-label" for="inputState">Events</label>
+                    <select id="inputState" class="form-control">
+                        <option selected>Choose...</option>
+                        <option>Wedding</option>
+                        <option>Rice feeding ceremony</option>
+                        <option>Bratabanda</option>
+                        <option>Bel Bibaha</option>
+
+                    </select>
+                </div>
+            </div>
+
+            <div align="center">
+                <button type="submit" class="btn-search">Search</button>
+            </div>
+        </form>
+
+
+
+    </div>
+
+</div>
+<div class="wrapper">
+    <div class="box a">
+        <img src="{% static 'home/img/1.jpg' %}" alt="">
+    </div>
+    <div class="box b">
+        <h1 class="whyTitle">Why Venbook?</h1>
+        <div class="txt1">
+            <div>Nepali weddings are always stressful when it comes to pre -wedding, Mehendi ceremony, pre photoshoot,
+                clothing, printing wedding cards, and searching venues at the last minute. We understand that a wedding
+                is a very special occasion for you and you cannot experiment with the things that can turn into a
+                disaster.</div>
+            <div>Compare the price and quality of all vendors and select the one that suits your budget. Our mission is
+                to help our clients to find the best vendor with up-to-date information under their budget while making
+                everyone feel valued, celebrated and relaxed.</div>
+        </div>
+
+        <button class="btn">
+            Know us better
+        </button>
+    </div>
+    <div class="box c">
+        <img src="{% static 'home/img/2.jpg' %}" alt="">
+    </div>
+    <div class="box d">
+        <img src="{% static 'home/img/3.jpg' %}" alt="">
+    </div>
+
+</div>
+
+<!-- <footer class="footer">
+  <div class="containerfoot">
+      <div class="row">
+          <div class="footer-col">
+              <img src="img/logo.png" alt="" width="240px">
+          </div>   
+          <div class="footer-col">
+              <h4>Know us better</h4>
+              <p class="textpara">Lorem quos assumenda ducimus, aliquid maxime voluptatum omnis deleniti obcaecati, consequuntur error vitae voluptatibus. Iste libero esse tenetur quasi blanditiis officia molestias. Ducimus iste sit quia placeat deserunt, nulla praesentium totam atque qui, consequatur deleniti?</p>
+          </div>
+          <div class="footer-col">
+              <h4>Quick links</h4>
+              <div class="row">
+               <ul>
+                   <li><a href="#">Home</a></li>
+                   <li><a href="#">Contact us</a></li>
+                   <li><a href="#">About us</a></li>
+                   <li><a href="#">Newsletter</a></li>
+               </ul>
+               <ul class="row-1">
+                   <li><a href="#">Royal Wedding</a></li>
+                   <li><a href="#">Wedding Party</a></li>
+                   <li><a href="#">Photographer Enquiry</a></li>
+                   <li><a href="#">Makeup Artist Enquiry</a></li>
+               </ul> 
+           </div>  
+          </div> 
+
+          <div class="footer-col">
+              <h4>Give us a call!</h4>
+              <ul>
+                  <li><h5>9800000000</h5></li>
+                  <li><h5>info@venbook.com</h5></li>
+              </ul>
+          </div>
+         
+      </div>
+      <div class="rights">
+          <p>Dillibazar, Kathmandu </p>
+          <p>2022 Venbook</p>
+      </div>
+  </div>
+</footer> -->
+
+
+
+{% endblock %}

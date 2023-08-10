@@ -1,0 +1,551 @@
+@charset "utf-8";
+
+body {    
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .venue-frame,
+  .basket-module,
+  .basket-labels,
+  .basket-product {
+    width: 100%;
+  }
+  
+  input,
+  button,
+  .basket,
+  .basket-module,
+  .basket-labels,
+  .item,
+  .price,
+  .quantity,
+  .status,
+  .basket-product,
+  .venue-image,
+  .venue-details {
+    float: left;
+  }
+  
+  .hide {
+    display: none;
+  }
+  
+  main {
+    clear: both;
+    font-size: 0.75rem;
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 1rem 0;
+
+  }
+  
+  .basket,
+  aside {
+    padding: 0 1rem;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  
+  .basket {
+    width: 70%;
+  }
+  
+  .basket-module {
+    color: #111;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 0.3125rem;
+  }
+
+  .basket-labels {
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    margin-top: 1.625rem;
+  }
+  
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  li {
+    color: black;
+    display: inline-block;
+    padding: 0.625rem 0;
+    font-weight: 600;
+  }
+  
+  li.price:before {
+    content: '';
+  }
+  
+  .item {
+    width: 55%;
+  }
+  
+  .price,
+  .quantity,
+  .status {
+    width: 15%;
+  }
+  
+  /* .status {
+    text-align: right;
+  }
+   */
+  .remove {
+    bottom: 1.125rem;
+    float: right;
+    position: absolute;
+    right: 0;
+    text-align: right;
+    width: 45%;
+  }
+  
+  /* .remove button {
+    background-color: transparent;
+    color: #777;
+    float: none;
+    text-decoration: underline;
+    text-transform: uppercase;
+  } */
+  
+  .item-heading {
+    padding-left: 4.375rem;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  
+  .basket-product {
+    border-bottom: 1px solid #ccc;
+    padding: 1rem 0;
+    position: relative;
+  }
+  .venue-name{
+    color: black;
+    font-weight: 600;
+    font-size: 18px;
+  }
+  .venue-image {
+    width: 35%;
+  }
+  
+  .venue-details {
+    width: 65%;
+  }
+  
+  .venue-frame {
+    width: 190px;
+    border: 1px solid #aaa;
+  }
+  
+  .venue-details {
+    padding: 0 1.5rem;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  
+  .quantity-field {
+    background-color: #ccc;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    font-size: 0.625rem;
+    padding: 2px;
+    width: 3.75rem;
+  }
+  
+  aside {
+    float: right;
+    position: relative;
+    width: 30%;
+  }
+  
+  @media screen and (max-width: 420px) {
+    aside,
+    .basket,
+    .item{
+      width: 100%;
+    }
+    .heading{
+      font-size: 20px;
+    }
+    .basket-labels {
+      display: none;
+    }
+    .basket-module {
+      margin-bottom: 1rem;
+    }
+    .item {
+      margin-bottom: 1rem;
+    }
+    .venue-image {
+      width: 40%;
+    }
+    .venue-details {
+      width: 60%;
+    }
+    .price,
+    .status {
+      width: 33%;
+    }
+    .price:before{
+      content: 'Type: ';
+    }
+    .quantity {
+      /* text-align: center; */
+      width: 34%;
+    }
+    .quantity-field {
+      float: none;
+    }
+    .quantity:before {
+      content: 'People: ';
+    }
+    .venue-frame {
+      width: 120px;
+    }
+    
+  }
+
+  @media screen and (max-width: 840px) {
+    aside,
+    .basket,
+    .item{
+      width: 100%;
+    }
+    .heading{
+      font-size: 24px;
+    }
+    .basket-labels {
+      display: none;
+    }
+    .basket-module {
+      margin-bottom: 1rem;
+    }
+    .item {
+      margin-bottom: 1rem;
+    }
+    .venue-image {
+      width: 40%;
+    }
+    .venue-details{
+      width: 60%;
+    }
+    .price,
+    .status {
+      width: 33%;
+    }
+    .price:before{
+      content: 'Type: ';
+    }
+    .quantity {
+      width: 34%;
+    }
+    .quantity-field {
+      float: none;
+    }
+    .quantity:before {
+      content: 'People: ';
+    }
+    
+    
+    
+  }
+  
+  
+@media screen and (min-width: 420px) and (max-width: 960px) {
+  aside {
+    padding: 0 1rem 0 0;
+  }
+}
+
+@media screen and (max-width: 960px) {
+  main {
+    width: 100%;
+  }
+  .venue-details {
+    padding: 0 1rem;
+  }
+}@charset "utf-8";
+
+body {    
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .venue-frame,
+  .basket-module,
+  .basket-labels,
+  .basket-product {
+    width: 100%;
+  }
+  
+  input,
+  button,
+  .basket,
+  .basket-module,
+  .basket-labels,
+  .item,
+  .price,
+  .quantity,
+  .status,
+  .basket-product,
+  .venue-image,
+  .venue-details {
+    float: left;
+  }
+  
+  .hide {
+    display: none;
+  }
+  
+  main {
+    clear: both;
+    font-size: 0.75rem;
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 1rem 0;
+
+  }
+  
+  .basket,
+  aside {
+    padding: 0 1rem;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  
+  .basket {
+    width: 70%;
+  }
+  
+  .basket-module {
+    color: #111;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 0.3125rem;
+  }
+
+  .basket-labels {
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    margin-top: 1.625rem;
+  }
+  
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  li {
+    color: black;
+    display: inline-block;
+    padding: 0.625rem 0;
+    font-weight: 600;
+  }
+  
+  li.price:before {
+    content: '';
+  }
+  
+  .item {
+    width: 55%;
+  }
+  
+  .price,
+  .quantity,
+  .status {
+    width: 15%;
+  }
+  
+  /* .status {
+    text-align: right;
+  }
+   */
+  .remove {
+    bottom: 1.125rem;
+    float: right;
+    position: absolute;
+    right: 0;
+    text-align: right;
+    width: 45%;
+  }
+  
+  /* .remove button {
+    background-color: transparent;
+    color: #777;
+    float: none;
+    text-decoration: underline;
+    text-transform: uppercase;
+  } */
+  
+  .item-heading {
+    padding-left: 4.375rem;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  
+  .basket-product {
+    border-bottom: 1px solid #ccc;
+    padding: 1rem 0;
+    position: relative;
+  }
+  .venue-name{
+    color: black;
+    font-weight: 600;
+    font-size: 18px;
+  }
+  .venue-image {
+    width: 35%;
+  }
+  
+  .venue-details {
+    width: 65%;
+  }
+  
+  .venue-frame {
+    width: 190px;
+    border: 1px solid #aaa;
+  }
+  
+  .venue-details {
+    padding: 0 1.5rem;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  
+  .quantity-field {
+    background-color: #ccc;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    font-size: 0.625rem;
+    padding: 2px;
+    width: 3.75rem;
+  }
+  
+  aside {
+    float: right;
+    position: relative;
+    width: 30%;
+  }
+  
+  @media screen and (max-width: 420px) {
+    aside,
+    .basket,
+    .item{
+      width: 100%;
+    }
+    .heading{
+      font-size: 20px;
+    }
+    .basket-labels {
+      display: none;
+    }
+    .basket-module {
+      margin-bottom: 1rem;
+    }
+    .item {
+      margin-bottom: 1rem;
+    }
+    .venue-image {
+      width: 40%;
+    }
+    .venue-details {
+      width: 60%;
+    }
+    .price,
+    .status {
+      width: 33%;
+    }
+    .price:before{
+      content: 'Type: ';
+    }
+    .quantity {
+      /* text-align: center; */
+      width: 34%;
+    }
+    .quantity-field {
+      float: none;
+    }
+    .quantity:before {
+      content: 'People: ';
+    }
+    .venue-frame {
+      width: 120px;
+    }
+    
+  }
+
+  @media screen and (max-width: 840px) {
+    aside,
+    .basket,
+    .item{
+      width: 100%;
+    }
+    .heading{
+      font-size: 24px;
+    }
+    .basket-labels {
+      display: none;
+    }
+    .basket-module {
+      margin-bottom: 1rem;
+    }
+    .item {
+      margin-bottom: 1rem;
+    }
+    .venue-image {
+      width: 40%;
+    }
+    .venue-details{
+      width: 60%;
+    }
+    .price,
+    .status {
+      width: 33%;
+    }
+    .price:before{
+      content: 'Type: ';
+    }
+    .quantity {
+      width: 34%;
+    }
+    .quantity-field {
+      float: none;
+    }
+    .quantity:before {
+      content: 'People: ';
+    }
+    
+    
+    
+  }
+  
+  
+@media screen and (min-width: 420px) and (max-width: 960px) {
+  aside {
+    padding: 0 1rem 0 0;
+  }
+}
+
+@media screen and (max-width: 960px) {
+  main {
+    width: 100%;
+  }
+  .venue-details {
+    padding: 0 1rem;
+  }
+}

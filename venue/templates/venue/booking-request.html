@@ -1,0 +1,244 @@
+{% extends 'home/base.html' %}
+{% load static %}
+
+{% block link %}
+<a class="dropdown-item" href="{% url 'calender:viewCalender' %}">Calender</a>  
+<a class="dropdown-item" href="{% url 'venue:BookingRequest' %}">Booking Request</a>  
+
+{% endblock %}
+
+{% block title %}
+    My booking
+{% endblock %}
+
+{% block body %}
+<link rel="stylesheet" href="{% static 'venue/bookingReq.css' %}">
+<script type="text/javascript" src="{% static 'venue/jquery-3.6.0.js' %}"></script> 
+
+<div id="afterStatusDiv" class="afterstatusDiv">         
+</div>
+
+<div style="min-height: 100vh; padding: 30px;">
+    <h1 class="heading">Booking Requests</h1>
+    <div id="msgChk" class="msg-box d-none update-info alert alert-info alert-dismissible fade show" role="alert">
+        <p class="msg p-0 m-0">Please wait while we update the booking request</p> 
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    <table class="content-table">
+        <form name="requestUpdateForm" action="">
+        <thead>
+          <tr>
+            <th class="tableHeading">Event Date</th>
+            <th class="tableHeading">Customer Info</th>
+            <th class="tableHeading">Event type</th>
+            <th class="tableHeading">Guests</th>
+            <th class="tableHeading">Event Details</th> 
+            <th class="tableHeading">Status</th>
+            <th class="tableHeading">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for request in requests %}
+          <tr>
+            <td class="center-align"><div class="tableHeadingMobile">Event Date</div> {{request.venue_event_info.event_date}}</td>
+            <td>
+
+                <div class="tableHeadingMobile" style="margin-bottom: 10px;">Name</div> {{request.venue_event_info.full_name}} <br> 
+
+                <div class="tableHeadingMobile" style="margin-bottom: 10px;">Email</div> {{request.venue_event_info.email}} <br> 
+
+                <div class="tableHeadingMobile" style="margin-bottom: 2px;">Contact</div> {{request.venue_event_info.phone}} <br> 
+
+            </td>
+            <td class="center-align"><div class="tableHeadingMobile">Event Type</div> {{request.venue_event_info.event_type}}</td>
+            <td class="center-align"><div class="tableHeadingMobile">Guests</div> {{request.venue_event_info.people}}</td>
+            <td><div class="tableHeadingMobile">Event Details</div> {{request.venue_event_info.event_details}}</td>
+            <td class="center-align">
+
+                {% if request.cancelled == True %}
+                    <div id="statusCtn">
+                        <div class="tableHeadingMobile">Status</div> <strong style="color: red;">Canceled</strong>
+                    </div>
+                {% else %}
+                        {% if request.accept == False and request.reject == False %}
+                        <div>
+
+
+                            <div id="statusCtn">
+                                <div class="tableHeadingMobile">Status</div> <strong style="color: grey;">Pending</strong>
+                            </div>
+
+
+                        </div>
+                            {% elif request.accept == True and request.reject == False %}
+                                <div>
+                                    <div id="statusCtn">
+                                        <div class="tableHeadingMobile">Status</div> <strong style="color: rgb(0, 187, 0);">Accepted</strong>
+                                    </div>
+                
+                                </div>
+            
+                                
+                            {% elif request.accept == False and request.reject == True %}
+                            <div>
+
+                                <div id="statusCtn">
+                                    <div class="tableHeadingMobile">Status</div> <strong style="color: red;">Declined</strong>
+                                </div>
+                
+
+                            </div>
+            
+            
+                        {% endif %}
+                {% endif %}
+            
+            </td>     
+            <td class="center-align">
+                {% if request.cancelled == True %}
+                    <div id="actionBtnCtn">
+                        <button class='btn btn-danger btn-sm' disabled>Canceled</button>
+                    </div>
+                {% else %}
+
+                        {% if request.accept == False and request.reject == False %}
+                    <div>
+                        <div id="AfterStatus"></div>
+                        
+                        <div id="RequestUpdateRadio" >
+                            <input type="radio" id="accept" name="status" value=True>
+                            <label for="accept">Accept</label>
+                            <input type="radio" id="reject" name="status" value=False>
+                            <label for="reject">Reject</label>
+                        </div>
+                        <div id="actionBtnCtn">
+                            
+                            <button class='btn btn-success mb-4 btn-sm' id="{{request.id}}" onclick="sendRequestUpdate(event, {{request.id}})">Send Request update</button>
+                        </div>
+                    </div>
+                        {% elif request.accept == True and request.reject == False %}
+                            <div>
+                                <div id="AfterStatus">
+                                    <p>Advance Quotation: Nrs {{request.advance_quotation}}</p>
+                                </div>
+                                
+                            
+                                <div id="actionBtnCtn">
+                                    {% if request.advance_payment_received %}
+                                        <button class='btn btn-success mb-4 btn-sm' disabled>Advance Payment Received</button>
+                                    {% else %}
+                                        <button class='btn btn-warning mb-4 btn-sm' disabled>Awaiting Payment</button>
+                                    {% endif%}
+                                </div>
+                            </div>
+        
+                            
+                        {% elif request.accept == False and request.reject == True %}
+                        <div>
+                            <div id="AfterStatus">
+                                Reject message:<br/><textarea id='reject_reason' name='reject_reason' id='' cols='30' disabled>{{request.reject_reason}}</textarea><br/>
+                            </div>
+                            
+                            <div id="actionBtnCtn">
+                                <button class='btn btn-danger mb-4'>Delete</button>
+                            </div>
+                        </div>
+    
+                        {% endif %}
+                {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </form>
+        </tbody>
+      </table>
+</div>
+ 
+<script>   
+    // For updating the request
+    function addInputField()
+    {
+        document.getElementById('afterStatusDiv').innerHTML= ""
+
+        document.getElementsByClassName("afterstatusDiv")[0].style.height = "150px"
+        document.getElementsByClassName("afterstatusDiv")[0].style.padding = "20px"
+
+        document.getElementById('afterStatusDiv').innerHTML += "Advance Quotation:<br/> <input type='number' id='Newquotation' name='quotation' value='' /><br/>";
+        
+    }
+    function addTextField()
+    {
+        document.getElementById('afterStatusDiv').innerHTML= ""
+        document.getElementsByClassName("afterstatusDiv")[0].style.height = "335px"
+        
+        document.getElementById('afterStatusDiv').innerHTML += "Reject message:<br/><textarea  name='reject_reason' id='Newreject_reason' cols='30' rows='10'></textarea><br/>";
+        
+    }
+    var radios = document.forms["requestUpdateForm"].elements["status"];
+
+    
+    
+    var RequestStatus = "False"
+    for(var i = 0, max = radios.length; i < max; i++) {
+        radios[i].onclick = function() {
+            console.log(i)
+            if(this.value == "True"){
+                RequestStatus = "True"
+                addInputField()
+            }
+            else if(this.value == "False"){
+                RequestStatus = "False"
+                addTextField()
+            }
+        }
+    }
+    
+    
+    // var CurrentClickedBookingID = ""
+
+    // function returnId(e,id){
+    //     e.preventDefault();
+    //     CurrentClickedBookingID =  id
+    // }
+    
+    function sendRequestUpdate(e,id){
+        e.preventDefault();
+        console.log(id)
+        $('#' + id).prop('disabled', true)
+        $('#' + id).removeClass("btn-success");
+        $('#' + id).addClass("btn-info");
+        $('#' + id).html("Please wait while we process the booking status");
+        document.getElementsByClassName("afterstatusDiv")[0].style.height = "0px"
+        $('.update-info').removeClass('d-none')
+        $.ajax({
+                type : "POST", 
+                url: "{% url 'SendRequestUpdate' %}",
+                data: {
+                 id : id,
+                 status : RequestStatus,
+                 quotation : $('#Newquotation').val(),
+                 reason : $('#Newreject_reason').val(),
+                 csrfmiddlewaretoken: csrftoken,
+                 dataType: "json",
+                },
+                
+                success: function(data){
+                   console.log(data) /* response message */
+                   alert("Booking Request Updated. Respective customer have been informed. Thank you for your patience!")
+                   location.reload()
+                },
+         
+                failure: function() {
+                    console.log("failed")
+                    
+                }
+         
+         
+            });
+
+    }
+    
+</script>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial scale=1.0">
+    <title></title>
+    <!-- <link rel="stylesheet" href="venueregistration_submitted.css"> -->
+    <link rel="stylesheet" href="{% static 'accounts/venueregistration_submitted.css' %}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" charset="utf-8"></script>
+</head>
+    
+   <body>
+    <form action="{% url 'home:index' %}" class="form-submit">
+        <div align="center">
+            <img src="{% static 'accounts/img/Logo.png' %}" alt="venbook logo" width="200" height="100%">
+        </div>
+        <br>
+
+        <div class="txta">
+            <p style="text-align:center; font-weight: 500;">Your venue registration form has been submitted for verification.</p>
+        </div>
+
+        <div class="txtb">
+            <p style="text-align:center; font-weight: 500;">We shall inform you through your email once the verification process is completed.</p>
+            <br>
+            <br>
+        </div>
+
+        <br> 
+            <button type="submit" class="direct" style="font-size: 15px; color:rgb(22, 22, 21);">Redirect to home page</button>
+
+    </form>
+
+</body>
+
+</html>

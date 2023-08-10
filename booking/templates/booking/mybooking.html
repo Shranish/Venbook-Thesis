@@ -1,0 +1,203 @@
+{% extends 'home/base.html' %}
+{% load static %}
+
+{% block title %}
+    My booking
+{% endblock %}
+
+{% block body %}
+<link rel="stylesheet" href="{% static 'booking/mybooking.css' %}">
+
+<div style="min-height: 100vh; padding: 30px;" class="booking-page">
+  <div class="esewa-pay d-none">
+    <form name="esewa-form" id="esewa-form" action="https://uat.esewa.com.np/epay/main" method="POST">
+      <input value="0" name="tAmt" type="text">
+      <input value="0" name="amt" type="text">
+      <input value="0" name="txAmt" type="text">
+      <input value="0" name="psc" type="text">
+      <input value="0" name="pdc" type="text">
+      <input value="EPAYTEST" name="scd" type="text">
+      <input value="0" name="pid" type="text">
+      <input value="http://127.0.0.1:8000/bookings/esewa-verify/" type="text" name="su">
+      <input value="{{request.build_absolute_uri}}" type="text" name="fu">
+      <input id="payAdvance" value="Submit" type="submit">
+      </form>
+  </div>
+  <div class="mybooking-title">
+      <h1 class="heading pt-3">My Bookings</h1> 
+         <div id="msgChk" class="msg-box cancel-info d-none alert alert-info alert-dismissible fade show" role="alert">
+          <p class="msg p-0 m-0">Please wait while we cancel your booking request</p> 
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+         <div id="msgChk" class="msg-box esewa-info d-none alert alert-info alert-dismissible fade show" role="alert">
+          <p class="msg p-0 m-0">Please wait while we connect you to Esewa</p> 
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+    </div>
+    <div class="basket-labels">
+      <ul>
+        <li class="item item-heading">Venue</li>
+        <li class="price">Event Name</li>
+        <li class="quantity">No. of People</li>
+        <li class="status">Status</li>
+        
+      </ul>
+    </div>
+    
+    {% if bookingHistory %}
+      {% for request in bookingHistory %}
+        <div class="basket-product">
+          <div class="item">
+            <div class="venue-image">
+              <img src="{{request.venue_event_info.venue_account.venue_pp.url}}" class="venue-frame">
+            </div>
+            <div class="venue-details">
+              <h1 class="venue-name"><span class="item-quantity"></span>{{request.venue_event_info.venue_account}}</h1>
+              <p><strong>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-check" viewBox="0 0 16 16">
+                  <path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                  <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                </svg> {{request.venue_event_info.event_date|date:"Y-m-d"}}
+              </strong></p>
+              {% if request.advance_payment_received == False %}
+                      <button id="checkRemainingdays" onclick=RemainingDaysLeft("{{request.venue_event_info.event_date|date:"Y-m-d"}}","{{request.id}}")> Cancel </button>
+               {% endif%}
+
+              <div class="location">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
+                      <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A31.493 31.493 0 0 1 8 14.58a31.481 31.481 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94zM8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z"/>
+                      <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                    </svg>
+                    {{request.venue_event_info.venue_account.address}}, {{request.venue_event_info.venue_account.city}}
+              </div>
+            </div>
+          </div>
+          <div class="price">{{request.venue_event_info.event_name}}</div>
+          <div class="quantity">{{request.venue_event_info.people}}</div>
+          <div class="status">
+            {% if request.accept == False and request.reject == False %}
+            <div>
+                <div id="statusCtn">
+                    <p>Pending</p>
+                </div>
+                <br>
+            </div>
+                <!-- If accepted -->
+                {% elif request.accept == True and request.reject == False %}
+                    <div>
+                        <div id="statusCtn">
+                            <p style="color:rgb(0, 202, 0);"> <strong> Accepted </strong></p>
+                        </div>
+    
+                        <div id="AfterStatus">
+                            Advance Quotation: <strong> NRs {{request.advance_quotation}} </strong><br/>
+                          <!-- <div class="remove">
+                              <button>Remove</button>
+                            </div> -->
+                        </div>
+                        {% if request.advance_payment_received %}
+                          <button class='btn btn-success mb-4 btn-sm' disabled>Advance Payment Paid</button>
+                        {% else %}
+                          <button onclick=PayWithEsewa("{{request.id}}","{{request.advance_quotation}}")> Pay with Esewa</button>
+                        {% endif%}
+                        <br>
+                    </div>
+
+                    <!-- If Rejected -->
+                {% elif request.accept == False and request.reject == True %}
+                <div>
+
+                    <div id="statusCtn">
+                        <p style="color:red;">Rejected</p>
+                    </div>
+    
+                    <div id="AfterStatus">
+                        Reject message:<br/><textarea id='reject_reason' name='reject_reason' id='' cols='30' disabled>{{request.reject_reason}}</textarea><br/>
+                    </div>
+                    
+                    
+                    <br>
+                </div>
+
+
+            {% endif %}
+          </div>
+          
+        </div>
+      {% endfor %}
+    {% else %}
+    <div class="basket-product">
+      <h5 style="color: rgb(95, 95, 95);">No booking records to show</h5>
+    </div>
+    {% endif %}
+    </div>
+
+    
+      
+
+<script type="text/javascript" src="{% static 'venue/jquery-3.6.0.js' %}"></script> 
+<script>
+  
+
+  let remainingDays;
+  var today = new Date();
+  var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+
+  function RemainingDaysLeft(otherDate,id) {
+    date = new Date(date)
+    otherDate = new Date(otherDate)
+
+    remainingDays = Math.ceil(Math.abs(date - otherDate) / (1000 * 60 * 60 * 24))
+    console.log(remainingDays)
+    if (remainingDays<14){
+      alert("cannot be cancelled")
+    }else{
+      $('.cancel-info').removeClass('d-none')
+      $.ajax({
+                type : "POST", 
+                url: "{% url 'Cancelbooking' %}",
+                data: {
+                 id : id,
+                 remainingDays : remainingDays,
+                 csrfmiddlewaretoken: csrftoken,
+                 dataType: "json",
+                },
+                
+                success: function(data){
+                   console.log(data) /* response message */
+                   alert("Booking Cancelled. Please check cancelled booking page. Thank you for your patience!")
+                   location.reload()
+                },
+         
+                failure: function() {
+                    console.log("failed")
+                    alert("Booking Failed")
+
+                }
+         
+         
+            });
+    }
+
+    };
+
+
+    function PayWithEsewa(id,quotation){
+        $('input[name="tAmt"]').val(quotation);
+        $('input[name="amt"]').val(quotation);
+        $('input[name="pid"]').val(id);
+        $('.esewa-info').removeClass('d-none')
+
+        setTimeout(function(){
+          document.getElementById("esewa-form").submit()
+        })
+
+    }
+
+</script>
+
+ {% endblock %}

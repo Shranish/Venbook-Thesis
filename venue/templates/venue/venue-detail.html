@@ -1,0 +1,367 @@
+{% extends 'home/base.html' %}
+{% load static %}
+
+{% block title %}
+    Venue Detail
+{% endblock %}
+
+{% block body %}
+<link rel="stylesheet" href="{% static 'venue/venue-detail.css' %}">
+<link rel="stylesheet" href="{% static 'venue/vanilla-calendar.css' %}">
+<script type="text/javascript" src="{% static 'venue/jquery-3.6.0.js' %}"></script> 
+<script type="text/javascript" src="{% static 'venue/jquery.easing.min.js' %}"></script> 
+<script src="{% static 'venue/vanilla-calendar.js' %}"></script>
+<script>var exports = {};</script>
+
+<div class="Detailcontainer">
+    <div class="image">
+      <img class="venue-pp" src=" {{venue_instance.venue_pp.url}}" > 
+      <div class="pop-images">
+        
+          <img class="image-card" src="{% static 'img/imp1.jpg' %}" alt="">
+        
+          <img class="image-card" src="{% static 'img/imp2.jpg' %}" alt="">
+        
+          <img class="image-card" src="{% static 'img/imp3.jpg' %}" alt="">
+        
+          <img class="image-card" src="{% static 'img/imp4.jpg' %}" alt="">
+        
+      </div>  
+    </div>
+    <div class="image-popup animate__animated animate__fadeIn">
+      <span>&times;</span>
+      <img src="{% static 'img/imp1.jpg' %}" alt="">
+    </div>
+    <div class="venue-name mt-4">
+       {{venue_instance.name}}
+       <div class="location">{{venue_instance.address}}, {{venue_instance.city}}</div>
+
+       
+    </div>
+    <!-- <div class="rate">
+      <input type="radio" id="star5" name="rate" value="5" />
+      <label for="star5" title="text">5 stars</label>
+      <input type="radio" id="star4" name="rate" value="4" />
+      <label for="star4" title="text">4 stars</label>
+      <input type="radio" id="star3" name="rate" value="3" />
+      <label for="star3" title="text">3 stars</label>
+      <input type="radio" id="star2" name="rate" value="2" />
+      <label for="star2" title="text">2 stars</label>   aw
+      <input type="radio" id="star1" name="rate" value="1" />
+      <label for="star1" title="text">1 star</label>
+    <br> -->
+    <div class="ctndetail d-flex justify-content-between">
+        <div class="col-md-7 left-side">
+          <div class="description mb-4">
+            {{venue_instance.description}}
+          </div>
+
+
+          <div class="DropdownTitleDiv">
+            <h4>
+              Estimated Pricing
+            </h4>
+            <button id="pricewrapperBtn"><img src="{% static 'img/down.png' %}" alt=""></button>
+          </div>
+
+          <div id="priceWrapper" class="DataWrapperDiv">
+            <div class="d-flex justify-content-between">
+              <p class="avg-txt">
+                Average pricing for 0-300 people<br>
+                Average pricing for 300-500 people<br>
+                Average pricing for above 500 people
+              </p>
+              <p class="avg-txt">
+                <b>{{venue_price.min_people}} per plate</b><br>
+                <b>{{venue_price.mid_people}} per plate</b><br>
+                <b>{{venue_price.max_people}} per plate</b>
+              </p>
+            </div>
+            <h4 class="ad-pr">
+              Additional Services Price
+            </h4>
+            <div class="avg-txt mt-3">
+              DJ starting from Rs {{venue_price.dj_price}}<br>
+              {% if venue_price.decoration %}
+                Decorations according to choice. (Price varies accordingly)<br>
+              {% endif %}
+              Projectors starting from Rs {{venue_price.projectors}}
+            </div>
+          </div>
+          
+          <div class="DropdownTitleDiv">
+            <h4>
+              Services Provided
+            </h4>
+            <button id="servicewrapperBtn"><img src="{% static 'img/down.png' %}" alt=""></button>
+          </div>
+          <div class="ServiceWrapperDiv d-flex flex-columns flex-wrap">
+            {% for i in venue_services.choice %}
+              <div class="avg-txt mt-1 mr-3">
+                <p style="font-size: 16px; font-weight: 400;"><span style="margin-right: 5px"><img src="{% static 'img/yes.png' %}" width="25px" height="25px"></span> {{i}}</p>
+              </div>
+              {% endfor %}
+            
+          </div>
+          <br>
+
+          <div class="customer-review">
+            <div class="d-flex align-items-center">
+              <h4 class="customer-heading">Customer Review</h4>
+              <button style="font-size: 14px;" class="btn btn-primary btn-sm ml-4">Add Review</button>
+            </div>
+            {% for review in reviews %}
+            <div class="card review-card mb-3 card-box" style="max-width: 540px;">
+              <div class="row g-0">
+                <div class="col-md-3 profile-image">
+                  <img src="{% static 'img/Imperial_banquet.jpg' %}" class="img-fluid rounded-start profile-img" alt="...">
+                </div>
+                <div class="col-md-9 no-padding">
+                  <div class="card-body">
+                    <div class="customer-name">{{review.user.first_name}} {{review.user.last_name}} </div>
+                    <p class="dateOfReview"><small class="text-muted">{{review.timestamp}}</small></p>
+                    <p class="customer-description">{{review.comment}}</p>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+
+            <div class="button-container d-flex justify-content-center">
+              <button class="prev-btn btn">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+              <button class="next-btn btn">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+
+          </div>    
+
+          <form class="review-form" onsubmit="submitReview()" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <input name="venue_id" id="venue_id" value="{{venue_instance.id}}" class="input"></input>
+                <textarea name="comment" id="comment" class="input"></textarea>
+            </div>
+            {% if request.user.is_authenticated %}
+                <button class="primary-btn">Submit</button>
+            {% else %}
+                You must be logged in to post a review
+            {% endif %}
+        </form>
+
+
+        </div>
+        <div class="col-md-5 right-side">
+          <p class="booking-header"> Check available dates </p><br>
+            <div class="calender-dates">
+              <div class="vanilla-calendar">
+  
+              </div>
+
+              <div class="mt-3 d-flex">
+                <div class="eventInfoColor">
+                  <div class="color-circle border-grey"></div>
+                  <div class="color-info">Available</div>
+                </div>
+                <div class="eventInfoColor">
+                  <div class="color-circle red"></div>
+                  <div class="color-info">Not Available</div>
+                </div>
+                
+              </div>
+            </div>
+            <div class="booking-form mt-5">
+                <p class="booking-header"> Booking Details Form </p><br>
+                <form method="POST">
+                  {% csrf_token %}
+                    <div class="form-group">
+                      <div class="d-none">
+                        <label for="Name">Venue</label>
+                        {{EventBookForm.venue_account}}<br>
+                      </div>
+
+                      <label for="Name">Full Name</label>
+                      {{EventBookForm.full_name}}<br>
+                      
+                      <label for="address">Address</label>
+                      {{EventBookForm.address}}<br>
+                      
+                      <label for="contact">Contact Number</label>
+                      {{EventBookForm.phone}}<br>
+                      
+                      <label for="inputEmail">Email address</label>
+                      {{EventBookForm.email}}<br>
+
+                      <label for="booking-date">Booking Date</label>
+                      {{EventBookForm.event_date}}<br>
+
+                      <label for="type">Event Name</label>
+                      {{EventBookForm.event_name}}<br>
+
+                      <label for="type">Event Type</label>
+                      {{EventBookForm.event_type}}<br>
+                      
+                      <label for="type">People</label>
+                      {{EventBookForm.people}}<br>
+
+                      <label for="exampleFormControlTextarea1" class="form-label">Details of Booking</label>
+                      {{EventBookForm.event_details}}
+                    </div>
+                    {% if user.is_authenticated %}
+                    <div align="center">
+                      <button type="submit" class="book-now">BOOK NOW</button>
+                  </div>
+                  <div class="or">
+                      <div></div>
+                      <p class="underline">or</p>
+                      <div></div>
+                  </div>
+                  <div align="center">
+                    <button type="submit" class="callback">REQUEST FOR CALLBACK</button>
+                </div>
+                {% else %}
+    
+            <div align="center">
+              <div class="alert alert-danger" role="alert">
+                <a href="{% url 'accounts:loginAsUser' %}" style="color:red">Please log in to book this venue</a>
+              </div>
+          </div>
+            {% endif %}
+
+                </form>
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                        {{ form.errors }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var w = window.innerWidth;
+      let wrapper=false
+         $('#pricewrapperBtn').click(function(){
+            if (wrapper == false){
+                document.getElementsByClassName("DataWrapperDiv")[0].style.height = "350px"
+                document.getElementsByClassName("DataWrapperDiv")[0].style.padding = "10px"
+                // document.getElementsByClassName("DataWrapperDiv")[0].style.transition = "0.6s ease-in-out;"
+                wrapper=true
+            }
+            else if(wrapper==true){
+              document.getElementsByClassName("DataWrapperDiv")[0].style.height = "0"
+                document.getElementsByClassName("DataWrapperDiv")[0].style.padding = "0"
+                wrapper=false
+            }
+         })
+         let wrapper2=false
+              $('#servicewrapperBtn').click(function(){
+                 if (wrapper2 == false){
+                     document.getElementsByClassName("ServiceWrapperDiv")[0].style.height = "200px"
+                     document.getElementsByClassName("ServiceWrapperDiv")[0].style.padding = "10px"
+                     // document.getElementsByClassName("DataWrapperDiv")[0].style.transition = "0.6s ease-in-out;"
+                     wrapper2=true
+                 }
+                 else if(wrapper2==true){
+                     document.getElementsByClassName("ServiceWrapperDiv")[0].style.height = "0"
+                     document.getElementsByClassName("ServiceWrapperDiv")[0].style.padding = "0"
+                     wrapper2=false
+                 }
+              })
+         if (w<426){
+           let wrapper2=false
+              $('#servicewrapperBtn').click(function(){
+                 if (wrapper2 == false){
+                     document.getElementsByClassName("ServiceWrapperDiv")[0].style.height = "350px"
+                     document.getElementsByClassName("ServiceWrapperDiv")[0].style.padding = "10px"
+                     // document.getElementsByClassName("DataWrapperDiv")[0].style.transition = "0.6s ease-in-out;"
+                     wrapper2=true
+                 }
+                 else if(wrapper2==true){
+                     document.getElementsByClassName("ServiceWrapperDiv")[0].style.height = "0"
+                     document.getElementsByClassName("ServiceWrapperDiv")[0].style.padding = "0"
+                     wrapper2=false
+                 }
+              })
+         }
+
+         
+        //  var calendarEvents= []
+        //  {% for i in allevents %}
+        //     calendarEvents.push(
+        //         "{{i.venue_event_info.event_date|date:"Y-m-d"}}",
+        //         "{{i.event_date|date:"Y-m-d"}}"
+
+        //     );
+        //     {% endfor %}
+
+         const calendar = new VanillaCalendar({
+
+                HTMLElement: document.querySelector('.vanilla-calendar'),
+                settings: {
+                  selected: {
+                    dates: calendarEvents,
+                    },
+                  visibility: {
+                    weekend: false,
+                  },
+                  selection: {
+                    day: false,
+                  },
+                  actions: {
+                  clickDay(e) {
+                    alert(e.target.dataset.calendarDay);
+                  },
+                },
+              }
+                });
+              calendar.init();
+
+document.querySelectorAll('.pop-images img').forEach(image =>{
+  image.onclick = () =>{
+    document.querySelector('.image-popup').style.display = 'block';
+    document.querySelector('.image-popup img').src = image.getAttribute('src')
+  }
+});
+document.querySelector('.image-popup span').onclick = () =>{
+document.querySelector('.image-popup').style.display = 'none';
+}
+
+
+function submitReview(){
+  $.ajax({
+                type : "POST", 
+                url: "{% url 'AddReview' %}",
+                data: {
+                 venue_id : $('#venue_id').val(),
+                 comment : $('#comment').val(),
+                 csrfmiddlewaretoken: csrftoken,
+                 dataType: "json",
+                },
+                
+                success: function(data){
+                   console.log(data) /* response message */
+                   alert("Comment Added")
+                   location.reload()
+                },
+         
+                failure: function() {
+                    console.log("failed")
+                    
+                }
+         
+         
+            });
+
+}
+</script>
+
+
+
+
+
+{% endblock %}

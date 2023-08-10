@@ -1,0 +1,179 @@
+{% extends 'home/base.html' %}
+{% load static %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+    
+    
+    <script>
+    $(function(){
+      $('.datepicker').datepicker({
+          format: 'mm-dd-yyyy'
+        });
+    });
+    </script>
+    
+{% block body %}
+
+    <div class="justify-content-center top">
+      <div class="d-flex justify-content-evenly align-items-center filter-bar">
+        <div class="p-2">
+          <input type="text" class="form-control-lg i-box" id="email" placeholder="Search by location" name="email">
+        </div>
+        <div class="p-2">
+          <input type="text" class="form-control-lg datepicker i-box-1 " id="email" placeholder="Event Date" name="email">
+        </div>
+        <div class="p-2">
+          <select required class="form-control-lg i-box-1" id="">
+            <option value="" disabled selected hidden>Event Type</option>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+          </select>
+        </div>
+        <div class="p-3">
+          <button class="butn">Filter</button>
+        </div>
+        <div class=" ml-auto p-2">
+          <input type="email" class="form-control  i-box-2" id="email" placeholder="Sort by: low to high" name="email"> 
+        </div>
+      </div>
+    </div>
+
+    <div class="row displayCtn">
+      
+      <div class="left-ctn col-md-8 d-flex flex-column">
+       <div class="venue-ctn p-0">
+        <div class="mt-4" >
+          <h5 class="breadcrumb">Home>Venue</h5>
+        </div>
+        <div>
+          <div class="collection-list">
+            {% for venueData in allPosts  %}
+            <div class="col-md-5 col-lg-5 col-xl-3 card">
+              <div class="img-card">
+                <img src="{{venueData.venue_account.venue_pp.url}}" alt="">
+              </div>
+              <div class="text-box">
+                <div class="d-flex p-10">
+                  <i class="fa fa-globe fa fa-2xs pr-1"></i>
+                  <p class="location-text">{{venueData.venue_account.address}} 
+                    <span style="
+                    cursor: pointer;
+                    color: #007bff;
+                    font-weight: 800;
+                    margin-left: 10px;
+                    ">
+                    <a onclick="viewMap({{venueData.venue_account.lat}},{{venueData.venue_account.lon}})">View in Map</a></span></p>
+                  <i class="fa fa-heart ml-auto" style="color: #FF5555;"></i>      
+                </div>
+                <div class="d-flex">
+                  <h3 class="venue_title">{{venueData.venue_account.name}}</h3>
+                </div>   
+                <div class="d-flex align-items-center mt-1">
+                  <div>
+                    <p class="info-text"><span style="font-weight: 600;">Venue Type:</span> Multiple Events  </p>
+                    <p class="info-text"><span style="font-weight: 600;">Capacity:</span> {{venueData.venue_account.capacity}} </p>
+                  </div>
+                  <div style="width: 84px;" class="ml-auto cardbtnCtn d-flex justify-content-end flex-column">
+                    <a class="viewPageDetail" href="{% url 'venue:VenueDetail' venueData.venue_account.id %}"><button style="outline:none;" class="cardActionBtn" >Details</button></a>
+                    <!-- <button class="cardActionBtn" >Details</button> -->
+                    
+                  </div> 
+                </div>     
+              </div>
+            </div>
+            {% endfor %}
+            </div>
+
+
+          </div>  
+        </div>
+
+        <div class="pagi mt-4">
+         <nav aria-label="...">
+           <ul class="pagination pagination-md content">
+             <li class="page-item"><a href="#" class="previous rec-box">&#8249;</a></li>
+             <li class="page-item"><a href="#" class="next rec-box">&#8250;</a></li>
+           </ul>
+         </nav>
+       </div>
+      </div>
+      <div id="venuemap" style="background-color: rgb(255, 255, 255);" class="col-md-4">
+        <p style="margin-top: 45vh;
+        margin-left: 35%; font-size: 18px; font-weight:800; color:rgb(90, 90, 90)">No map displayed</p>
+      </div>
+      </div>
+      
+    </div>
+
+    <script>
+      var w = window.innerWidth;
+
+
+
+  
+
+
+      if (document.getElementById("venuemap")[0].style.display = "block"){
+        document.getElementById("#footer")[0].style.width = "66%"
+      }
+
+      if (document.getElementById("venuemap")[0].style.display = "none"){
+        $('.left-ctn').addClass('col-md-12')
+        $('.card').addClass('col-xl-2')
+        $('.card').addClass('col-md-5')
+      }
+
+
+
+      
+      
+      function viewMap(lat,lon){
+
+        document.getElementById('venuemap').innerHTML = "<div id='map'><button class='MapcloseBtn' onclick='closeMap()'>close</button></div>";
+
+        var mapOptions = {
+            center: [lat, lon],
+            zoom: 15
+         }
+
+        var map = new L.Map('map', mapOptions);
+        var layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+        map.addLayer(layer);
+        var marker = new L.Marker([lat,lon]);
+        marker.addTo(map);
+
+
+        if (w<769){
+          if (document.getElementById("venuemap").style.display = "none"){
+
+            document.getElementById("venuemap").style.display = "block"
+            $('#venuemap').addClass('col-md-12')
+            document.getElementById("venuemap").style.position = "fixed"
+            document.getElementById("venuemap").style.top = "120px"
+          }
+        }
+
+    }
+
+      function closeMap(){
+        if (w<769){
+          if (document.getElementById("venuemap").style.display = "block"){
+            document.getElementById("venuemap").style.display = "none"
+        }
+        }
+        
+
+    }
+    </script>
+
+    {% endblock %}
+ 

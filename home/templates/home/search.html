@@ -1,0 +1,30 @@
+{% extends 'home/base.html' %}
+{% load static %}
+
+{% block title %}
+Search
+{% endblock %}
+
+{% block body %}
+
+{% for post in allPosts %}
+<div class="container my-3">
+    {% for post in allPosts  %}
+    <div
+        class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 my-4 position-relative">
+        <div class="col p-4 d-flex flex-column position-static">
+            <strong class="d-inline-block mb-2 text-primary"> {{post.name}}</strong>
+            <h3 class="mb-0">{{post.city}}</h3>
+            <div class="mb-1 text-muted">{{post.address}}</div>
+            <p class="card-text mb-auto">{{post.description| truncatechars:500}}</p>
+
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+</div>
+
+{% endfor %}
+
+{% endblock %}
